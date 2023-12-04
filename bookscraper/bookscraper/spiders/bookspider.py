@@ -1,5 +1,6 @@
 import scrapy
 
+
 class BookspiderSpider(scrapy.Spider):
     name = "bookspider"
     allowed_domains = ["books.toscrape.com"]
@@ -9,11 +10,11 @@ class BookspiderSpider(scrapy.Spider):
         books = response.css('article.product_pod')
 
         for book in books:
-            book_url = book.css("h3 a ::attr(href)").get()
-            if 'catalogue/' in book_url:
-                book_page_url = 'https://books.toscrape.com/' + book_url
+            book_details_url = book.css("h3 a ::attr(href)").get()
+            if 'catalogue/' in book_details_url:
+                book_page_url = 'https://books.toscrape.com/' + book_details_url
             else:
-                book_page_url = 'https://books.toscrape.com/catalogue/' + book_url
+                book_page_url = 'https://books.toscrape.com/catalogue/' + book_details_url
             yield response.follow(book_page_url, callback=self.parse_book_page)
 
         next_page = response.css("li.next a ::attr(href)").get()
